@@ -52,9 +52,8 @@ module Vagrant
           yield config.inventory_file
         else
           begin
-            forward = env[:vm].config.vm.forwarded_ports.select do |x|
-              x[:guestport] == ssh.guest_port
-            end.first[:hostport]
+            forward = env[:vm].config.ssh.port \
+                || env[:vm].driver.ssh_port(env[:vm].config.ssh.guest_port)
             if not config.hosts.kind_of?(Array)
               config.hosts = [config.hosts]
             end

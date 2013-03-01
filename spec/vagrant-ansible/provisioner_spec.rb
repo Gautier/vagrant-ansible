@@ -30,7 +30,9 @@ describe "Provisioner" do
           {:forwarded_ports => [{:guestport => 2222, :hostport => 22}]},
          :ssh => {:host => "localhost", :guest_port => 2222, :username => 'sshuser'}
         },
-        :env => {:default_private_key_path => "private_key_path"}
+        :env => {:default_private_key_path => "private_key_path"},
+        :driver =>
+          {:ssh_port => 2201}
       }
     }
   }
@@ -38,7 +40,7 @@ describe "Provisioner" do
   let(:filemock) {
     filemock = double(:tempfile)
     filemock.should_receive(:write).with("[#{config.hosts}]\n")
-    filemock.should_receive(:write).with("localhost:22\n")
+    filemock.should_receive(:write).with("localhost:2201\n")
     filemock.should_receive(:write).with("\n")
     filemock.should_receive(:fsync)
     filemock.should_receive(:close)
@@ -109,7 +111,9 @@ describe "Provisioner" do
           {:forwarded_ports => [{:guestport => 2222, :hostport => 22}]},
          :ssh => {:host => "localhost", :guest_port => 2222, :username => 'sshuser'}
         },
-        :env => {:default_private_key_path => "private_key_path"}
+        :env => {:default_private_key_path => "private_key_path"},
+        :driver =>
+          {:ssh_port => 2201}
       }
     }
   }
@@ -117,10 +121,10 @@ describe "Provisioner" do
   let(:multiple_hosts_filemock) {
     filemock = double(:multiple_hosts_tempfile)
     filemock.should_receive(:write).with("[#{multiple_hosts_config.hosts[0]}]\n")
-    filemock.should_receive(:write).with("localhost:22\n")
+    filemock.should_receive(:write).with("localhost:2201\n")
     filemock.should_receive(:write).with("\n")
     filemock.should_receive(:write).with("[#{multiple_hosts_config.hosts[1]}]\n")
-    filemock.should_receive(:write).with("localhost:22\n")
+    filemock.should_receive(:write).with("localhost:2201\n")
     filemock.should_receive(:write).with("\n")
     filemock.should_receive(:fsync)
     filemock.should_receive(:close)
